@@ -1,5 +1,10 @@
 // Imports
 const { routerApi } = require("./routes");
+const {
+  ormHandleErrors,
+  boomHandleErrors,
+  handleErrors,
+} = require("./middlewares/errors.middleware");
 
 // Libraries
 const express = require("express");
@@ -28,5 +33,9 @@ app.get("/", (req, res) => {
 });
 
 routerApi(app);
+
+app.use(ormHandleErrors);
+app.use(boomHandleErrors);
+app.use(handleErrors);
 
 module.exports = app;
