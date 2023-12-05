@@ -1,3 +1,6 @@
+// Imports
+const { routerApi } = require("./routes");
+
 // Libraries
 const express = require("express");
 const helmet = require("helmet");
@@ -23,5 +26,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   return res.send("I am a HOME");
 });
+
+routerApi(app);
 
 module.exports = app;
