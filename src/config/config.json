@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "Sandobase23",
+    "database": "cambiaovende",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "Sandobase23",
+    "database": "cambiaovende",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "Sandobase23",
+    "database": "cambiaovende",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
