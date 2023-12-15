@@ -20,7 +20,6 @@ exports.updateMemberValidation = [
   body('gerder').notEmpty().withMessage('gerder is required'),
   body('phone_number').notEmpty().withMessage('phone_number is required'),
   body('tech_role_id').notEmpty().withMessage('tech_role_id is required'),
-  body('imagen_id').notEmpty().withMessage('imagen_id is required'),
    
   validFields,
 ];
@@ -63,11 +62,13 @@ exports.loginMemberValidation = [
 
 exports.updatePasswordValidation = [
   body('currentPassword')
+  .notEmpty().withMessage('currentPassword is required')
     .isLength({ min: 8 })
     .withMessage('Password must have a least 8 characters')
     .matches(/[a-zA-Z]/)
     .withMessage('Password must have cotain a least one letter'),
   body('newPassword')
+  .notEmpty().withMessage('newPassword is required')
     .isLength({ min: 8 })
     .withMessage('Password must have a least 8 characters')
     .matches(/[a-zA-Z]/)

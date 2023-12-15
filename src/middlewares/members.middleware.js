@@ -1,5 +1,5 @@
 const AppError = require('../utils/appError');
-const Member = require('../models/user.model');
+const Member = require('../models/member.model');
 const catchAsync = require('../utils/catchAsync');
 
 exports.validMember = catchAsync(async (req, res, next) => {

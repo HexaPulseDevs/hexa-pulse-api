@@ -10,9 +10,6 @@ const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
 exports.signUp = catchAsync(async (req, res, next) => {
   const {first_name, email, last_name, gerder, phone_number, tech_role_id, password } = req.body; 
 
-console.table(req.body);
-console.log(req.file );
-
   if (!req.file) {  
     return next(new AppError('Please upload a file', 400));
   }
@@ -31,17 +28,17 @@ console.log(req.file );
     gerder: gerder.toLowerCase().trim(),
     phone_number: phone_number.toLowerCase().trim(),
     tech_role_id: tech_role_id.toLowerCase().trim(),
-    profileImgUrl: imgUpload.metadata.fullPath,
+    memberImgUrl: imgUpload.metadata.fullPath,
   });
 
   const tokenPromise = generateJWT(member.id);
 
-  const imgRefToDownload = ref(storage, member.profileImgUrl);
+  const imgRefToDownload = ref(storage, member.memberImgUrl);
   const urlPromise = getDownloadURL(imgRefToDownload); 
 
   const [token, url] = await Promise.all([tokenPromise, urlPromise]);
 
-  member.profileImgUrl = url;
+  member.memberImgUrl = url;
 
   res.status(200).json({
     status: 'success',
@@ -56,7 +53,7 @@ console.log(req.file );
       gerder: member.gerder,
       phone_number: member.phone_number,
       tech_role_id: member.tech_role_id,
-      profileImgUrl: member.profileImgUrl,
+      memberImgUrl: member.memberImgUrl,
     },
   });
 });
@@ -81,12 +78,12 @@ exports.signIn = catchAsync(async (req, res, next) => {
 
   const tokenPromise = generateJWT(member.id);
 
-  const imgRef = ref(storage, member.profileImgUrl);
+  const imgRef = ref(storage, member.memberImgUrl);
   const urlPromise = getDownloadURL(imgRef);
 
   const [token, url] = await Promise.all([tokenPromise, urlPromise]);
 
-  member.profileImgUrl = url;
+  member.memberImgUrl = url;
 
   res.status(200).json({
     status: 'success',
@@ -100,7 +97,7 @@ exports.signIn = catchAsync(async (req, res, next) => {
       gerder: member.gerder,
       phone_number: member.phone_number,
       tech_role_id: member.tech_role_id,
-      profileImgUrl: member.profileImgUrl,
+      memberImgUrl: member.memberImgUrl,
       
     },
   });

@@ -2,14 +2,12 @@ require('dotenv').config();
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
-const Member = require('../models/user.model');
+const Member = require('../models/member.model');
 const { promisify } = require('util');
 
 exports.protect = catchAsync(async (req, res, next) => {
  
   let token ; 
-
-  console.log("estoy en servidor protect token 1")
   
   if (
     req.headers.authorization &&  
@@ -18,10 +16,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     token = req.headers.authorization.split(' ')[1];  
   }
-
-  console.log("estoy en servidor token 2")
-  
-  console.log({ token }) 
 
   
   if (!token) {
@@ -67,7 +61,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
  
   req.sessionMember = member;
-  console.log({ member})
   next();
 });
 

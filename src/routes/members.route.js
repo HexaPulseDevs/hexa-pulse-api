@@ -18,6 +18,7 @@ router.get('/', membersController.findAllMembers);
 
 
 /**/
+
 router
   .use('/:id', membersMiddleware.validMember)
   .route('/:id')

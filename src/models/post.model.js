@@ -32,4 +32,4 @@ const postStatus = Object.freeze({
   disabled: 'disabled',
 });
 
-module.exports = { Post, postStatus };
+//module.exports = { Post, postStatus };

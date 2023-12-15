@@ -1,7 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const crypto = require('node:crypto');
-const { db } = require('./../database/config');
-//const { Post, postStatus } = require('../models/post.model'); 
+const { db } = require('./../database/config'); 
 const Image = require('../models/postImg1.model');
 const storage = require('../utils/firebase');
 const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
@@ -11,7 +10,7 @@ const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
 exports.findAllImages = catchAsync(async (req, res, next) => {
   const images = await Image.findAll({   
     where: {
-      status: postStatus.active,
+      status: "active",
     },
     attributes: {
       exclude: ['status' ], 
@@ -21,7 +20,7 @@ exports.findAllImages = catchAsync(async (req, res, next) => {
     limit: 10,
   });
 
-  const postPromises = images.map(async (post) => {
+  const imagesPromises = images.map(async (post) => {
 
     if (post.length > 0){
   
@@ -41,7 +40,7 @@ exports.findAllImages = catchAsync(async (req, res, next) => {
     return post;
   });
 
-  await Promise.all(postPromises);
+  await Promise.all(imagesPromises);
 
   return res.status(200).json({
     status: 'success',
@@ -82,11 +81,27 @@ exports.createImages = catchAsync(async (req, res, next) => {
 });
 
 
+exports.findOneImage = catchAsync(async (req, res, next) => {
+  const { image } = req;
+
+  const imgRef = ref(storage, image.image_url);
+  const url = await getDownloadURL(imgRef);
+
+  res.status(200).json({
+    status: 'success',
+    image: {
+      image_url: image.image_url,
+      alt_text: image.alt_text,
+    },
+  });
+});
+
+
 /**/
 exports.deleteImage = catchAsync(async (req, res, next) => {
   const { image } = req;
 
-  await image.update({ status: postStatus.disabled });
+  await image.update({ status: "disabled" });
 
   return res.status(200).json({
     status: 'success',

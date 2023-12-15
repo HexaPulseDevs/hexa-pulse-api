@@ -45,7 +45,7 @@ const Member = db.define('member1', {
     allowNull: true,
     field: 'password_changed_at',
   },
-  profileImgUrl: {
+  memberImgUrl: {
     type: DataTypes.STRING,
     allowNull: false,
     defaultValue:

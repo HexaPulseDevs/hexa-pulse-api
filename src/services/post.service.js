@@ -1,60 +1,62 @@
 const { ref, getDownloadURL } = require("firebase/storage");
 const PostImg = require("../models/postImg1.model");
-const { Post } = require('./../models/post.model');
-const User = require('./../models/user.model');
+const  Member  = require('./../models/member.model'); //post   { Post }
+//const User = require('./../models/member.model');
 const AppError = require('./../utils/appError');
 const storage = require('./../utils/firebase');
 
 class PostService {
   async findPost(id){
     try {
-      const post = await Post.findOne({
+      const member = await Member.findOne({
         where: {
           id,
           status: 'active'
         },
         attributes: {
-          exclude: ['userId', 'status']
+          exclude: [ 'status']
         },
         include: [
+/*
           {
             model: User,
             attributes: ['id', 'name', 'profileImgUrl', 'description']
           },
+          */
           {
             model: PostImg,
           }
         ]
       })
 
-      if(!post){
-        throw new AppError(`Post with id: ${id} not found`, 404);
+      if(!member){
+        throw new AppError(`Member with id: ${id} not found`, 404);
       }
 
-      return post
+      return member
     } catch (error) {
       throw new Error(error)
     }
   }
 
-  async downloadImgsPost(post){
+  async downloadImgsPost(member){
     try {
-      const imgRefUserProfile = ref(storage, post.user.profileImgUrl);
-      const urlProfileUser = await getDownloadURL(imgRefUserProfile);
+      const imgRefMember = ref(storage, member.memberImgUrl); // tratamiento de la imagen de perfil del miembro del equipo
+      const urlMember = await getDownloadURL(imgRefMember);
 
-      post.user.profileImgUrl = urlProfileUser;
-      console.log(post)
-      const postImgsPromises = post.PostImgs.map(async (postImg) => {
-        const imgRef = ref(storage, postImg.postImgUrl);
+      member.memberImgUrl = urlMember;
+     
+      const postImgsPromises = member.PostImgs.map(async (postImg) => { //tratamiento de las imagenes generales del proyecto
+        const imgRef = ref(storage, postImg.image_url);
         const url = await getDownloadURL(imgRef);
 
-        postImg.postImgUrl = url;
+        postImg.image_url = url;
         return postImg;
       });
 
       await Promise.all(postImgsPromises);
 
-      return post;
+      return member;
 
     } catch (error) {
       throw new Error(error)

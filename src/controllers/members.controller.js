@@ -1,4 +1,4 @@
-const Member = require('../models/user.model');
+const Member = require('../models/member.model');
 const storage = require('../utils/firebase');
 const catchAsync = require('../utils/catchAsync');
 const { ref, getDownloadURL } = require('firebase/storage');
@@ -11,13 +11,9 @@ exports.findAllMembers = catchAsync(async (req, res, next) => {
   });
 
   const membersPromises = members.map(async (member) => {
-    //obtenemos la referencia
-    const imgRef = ref(storage, member.profileImgUrl);
-    //nos traemos la url
+    const imgRef = ref(storage, member.memberImgUrl);
     const url = await getDownloadURL(imgRef);
-    //hacemos el cambio del path por la url
-    member.profileImgUrl = url;
-    //retornamos el usuario
+    member.memberImgUrl = url;
     return member;
   });
 
@@ -32,26 +28,28 @@ exports.findAllMembers = catchAsync(async (req, res, next) => {
 exports.findOneMember = catchAsync(async (req, res, next) => {
   const { member } = req;
 
-  const imgRef = ref(storage, member.profileImgUrl);
+  const imgRef = ref(storage, member.memberImgUrl);
   const url = await getDownloadURL(imgRef);
 
   res.status(200).json({
     status: 'success',
     member: {
-      name: member.name,
+      first_name: member.first_name,
+      last_name: member.last_name,
+      gerder: member.gerder,
       email: member.email,
-      description: member.description,
-      profileImgUrl: url,
-      role: member.role,
+      phone_number: member.phone_number,
+      imagenUrl: url,
+      tech_role_id: member.tech_role_id,
     },
   });
 });
 
 exports.updateMember = catchAsync(async (req, res, next) => {
   const {member } = req;
-  const { name, description } = req.body;
+  const { first_name, last_name, gerder, email, phone_number, tech_role_id  } = req.body;
 
-  await member.update({ name, description });
+  await member.update({ first_name, last_name, gerder, email, phone_number, tech_role_id });
 
   res.status(200).json({
     status: 'success',
